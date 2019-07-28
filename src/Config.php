@@ -7,24 +7,6 @@ class Config
      */
     protected static $config;
 
-    protected static function instance()
-    {
-        if (!static::$config)
-            static::$config = Performance::instance()->config;
-        return static::$config;
-    }
-
-    protected static function enableTool()
-    {
-        $config = static::instance();
-
-        // Check DISABLE_TOOL
-        if( ! $config->isEnableTool())
-            return false;
-
-        return true;
-    }
-
     /**
      * Set config item console live
      * @param bool $status
@@ -32,10 +14,28 @@ class Config
      */
     public static function setConsoleLive($status)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setConsoleLive($status);
+    }
+
+    protected static function enableTool()
+    {
+        $config = static::instance();
+
+        // Check DISABLE_TOOL
+        if (!$config->isEnableTool())
+            return false;
+
+        return true;
+    }
+
+    protected static function instance()
+    {
+        if (!static::$config)
+            static::$config = Performance::instance()->config;
+        return static::$config;
     }
 
     /**
@@ -45,7 +45,7 @@ class Config
      */
     public static function setPointLabelLTrim($mask)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setPointLabelLTrim($mask);
@@ -58,7 +58,7 @@ class Config
      */
     public static function setPointLabelRTrim($mask)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setPointLabelRTrim($mask);
@@ -71,10 +71,10 @@ class Config
      */
     public static function setEnableTool($value)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
-        static::$config->setEnableTool($value);
+        static::$config->enableTool($value);
     }
 
     /**
@@ -85,7 +85,7 @@ class Config
      */
     public static function setQueryLog($status, $viewType = null)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setQueryLog($status, $viewType);
@@ -98,7 +98,7 @@ class Config
      */
     public static function setPresenter($type)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setPresenter($type);
@@ -111,7 +111,7 @@ class Config
      */
     public static function setPointLabelNice($status)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setPointLabelNice($status);
@@ -124,24 +124,24 @@ class Config
      */
     public static function setRunInformation($status)
     {
-        if( ! static::enableTool())
+        if (!static::enableTool())
             return;
 
         static::$config->setRunInformation($status);
     }
 
-	/**
-	 * Set config point label nice
-	 * @param bool $status
-	 * return void
-	 */
-	public static function setClearScreen($status)
-	{
-		if( ! static::enableTool())
-			return;
+    /**
+     * Set config point label nice
+     * @param bool $status
+     * return void
+     */
+    public static function setClearScreen($status)
+    {
+        if (!static::enableTool())
+            return;
 
-		static::$config->setClearScreen($status);
-	}
+        static::$config->setClearScreen($status);
+    }
 
     /**
      * Reset

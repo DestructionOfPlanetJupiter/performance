@@ -31,14 +31,16 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
-        "bvanhoekelen/terminal-style": "^1.0"
+        "php": ">=7.1.0",
+        "bvanhoekelen/terminal-style": "^1.0",
+        "ext-json" : "*"
     },
     "require-dev": {
         "larapack/dd": "1.*",
         "phpunit/phpunit": "^5.7",
         "illuminate/database": "^5.4",
-        "illuminate/events": "^5.4"
+        "illuminate/events": "^5.4",
+        "vlucas/phpdotenv": "3.4.0"
     },
     "autoload": {
         "psr-4": {

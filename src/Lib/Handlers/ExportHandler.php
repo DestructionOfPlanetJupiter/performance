@@ -1,22 +1,64 @@
-<?php namespace Performance\Lib\Handlers;
+<?php
 
+declare(strict_types=1);
+
+namespace Performance\Lib\Handlers;
+
+use Performance\Lib\Interfaces\ExportInterface;
+use Performance\Lib\Point;
+
+/**
+ * Class ExportHandler
+ * @package Performance\Lib\Handlers
+ */
 class ExportHandler
 {
+    /**
+     * @var PerformanceHandler
+     */
     protected $performance;
+
+    /**
+     * @var
+     */
     protected $returnItem;
 
+    /**
+     * @var Point[]
+     */
     protected $points;
+
+    /**
+     * @var ExportInterface
+     */
     protected $config;
 
+    /**
+     * ExportHandler constructor.
+     * @param PerformanceHandler $performance
+     */
     public function __construct(PerformanceHandler $performance)
     {
         $this->performance = $performance;
     }
 
-    protected function checkIfAllIsSet()
+    /**
+     * @return mixed
+     */
+    public function get()
     {
-        if( $this->returnItem )
+        $this->checkIfAllIsSet();
+        $return = $this->returnItem;
+        $this->resetItems();
+
+        return $return;
+    }
+
+    protected function checkIfAllIsSet():void
+    {
+        if ($this->returnItem) {
             return;
+        }
 
         $this->config();
         $this->points();
@@ -26,41 +68,47 @@ class ExportHandler
         $this->returnItem['points'] = $this->points;
     }
 
-    protected function resetItems()
+    /**
+     * @return $this
+     */
+    public function config(): self
+    {
+        $this->config = $this->performance->config;
+        $this->returnItem = $this->config;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function points(): self
+    {
+        $this->points = $this->performance->getPoints();
+        $this->returnItem = $this->points;
+
+        return $this;
+    }
+
+    protected function resetItems():void
     {
         $this->points = null;
         $this->config = null;
         $this->returnItem = null;
     }
 
-    public function points()
-    {
-        $this->points = $this->performance->getPoints();
-        $this->returnItem = $this->points;
-        return $this;
-
-    }
-
-    public function config()
-    {
-        $this->config = $this->performance->config;
-        $this->returnItem = $this->config;
-        return $this;
-    }
-
-    public function get()
-    {
-        $this->checkIfAllIsSet();
-        $return = $this->returnItem;
-        $this->resetItems();
-        return $return;
-    }
-
+    /**
+     * @param $file
+     * @return bool|int
+     */
     public function toFile($file)
     {
-        return file_put_contents($file, $this->toJson());
+        return \file_put_contents($file, $this->toJson());
     }
 
+    /**
+     * @return false|string
+     */
     public function toJson()
     {
         $return = [];
@@ -70,37 +118,36 @@ class ExportHandler
         $this->checkIfAllIsSet();
 
         // Check if it is one or many to export
-        if($this->config and $this->points)
+        if ($this->config && $this->points) {
             $multiExport = true;
+        }
 
         // Config
-        if($this->config)
-        {
-            if($multiExport)
+        if ($this->config) {
+            if ($multiExport) {
                 $return['config'] = $this->config->export();
-            else
+            } else {
                 $return = $this->config->export();
+            }
         }
 
         // Points
-        if($this->points)
-        {
+        if ($this->points) {
             $points = [];
-            foreach ($this->points as $point)
-            {
+            foreach ($this->points as $point) {
                 $points[] = $point->export();
             }
 
-            if($multiExport)
+            if ($multiExport) {
                 $return['points'] = $points;
-            else
+            } else {
                 $return = $points;
+            }
         }
 
         // Reset
         $this->resetItems();
 
-        // Return
-        return json_encode($return);
+        return \json_encode($return);
     }
 }

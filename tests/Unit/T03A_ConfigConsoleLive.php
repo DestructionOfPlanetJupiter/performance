@@ -2,8 +2,9 @@
 
 use Performance\Config;
 use Performance\Performance;
+use PHPUnit\Framework\TestCase;
 
-class T03A_ConfigConsoleLive extends \PHPUnit_Framework_TestCase
+class T03A_ConfigConsoleLive extends TestCase
 {
     protected function setTestUp()
     {

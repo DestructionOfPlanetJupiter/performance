@@ -72,7 +72,7 @@ class WebPresenter extends Presenter
                         {
 
                             // For real calibrate results fake printing
-                            if( $point->getLabel() === Point::POINT_PRELOAD or $point->getLabel() === Point::POINT_MULTIPLE_PRELOAD)
+                            if( $point->getLabel() === Point::POINT_PRELOAD || $point->getLabel() === Point::POINT_MULTIPLE_PRELOAD)
                                 continue;
 
                             echo '<tr>'

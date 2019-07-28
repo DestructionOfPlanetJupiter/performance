@@ -38,6 +38,14 @@ class Point implements ExportInterface
     }
 
     /**
+     * @param boolean $isMultiplePoint
+     */
+    public function setIsMultiplePoint($isMultiplePoint)
+    {
+        $this->isMultiplePoint = (boolean)$isMultiplePoint;
+    }
+
+    /**
      * Start point
      *
      * return void
@@ -48,6 +56,16 @@ class Point implements ExportInterface
         $this->setStartTime();
         $this->setStartMemoryUsage();
     }
+
+    /**
+     * @param mixed $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    // Get and set
 
     /**
      * Finish point
@@ -65,17 +83,27 @@ class Point implements ExportInterface
     }
 
     /**
-     * Simple export function
+     * @param mixed $stopTime
      */
-    public function export()
+    public function setStopTimeIfNotExists($stopTime = null)
+    {
+        if (is_null($this->stopTime)) $this->setStopTime($stopTime);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function export():array
     {
         $vars = get_object_vars($this);
-        unset($vars['config']); // skip config
+
+        if (isset($vars['config'])) {
+            // skip config
+            unset($vars['config']);
+        }
 
         return $vars;
     }
-
-    // Get and set
 
     /**
      * @return mixed
@@ -90,7 +118,7 @@ class Point implements ExportInterface
      */
     public function setMemoryPeak($memoryPeak = null)
     {
-        $this->memoryPeak = ( $memoryPeak ) ? $memoryPeak : memory_get_peak_usage(true);
+        $this->memoryPeak = ($memoryPeak) ? $memoryPeak : memory_get_peak_usage(true);
     }
 
     /**
@@ -102,27 +130,11 @@ class Point implements ExportInterface
     }
 
     /**
-     * @param mixed $active
-     */
-    public function setActive($active)
-    {
-        $this->active = $active;
-    }
-
-    /**
      * @return mixed
      */
     public function getStopTime()
     {
         return $this->stopTime;
-    }
-
-    /**
-     * @param mixed $stopTime
-     */
-    public function setStopTimeIfNotExists($stopTime = null)
-    {
-        if(is_null($this->stopTime)) $this->setStopTime($stopTime);
     }
 
     /**
@@ -164,16 +176,16 @@ class Point implements ExportInterface
     {
         // Run ltrim
         $configLTrim = $this->config->getPointLabelLTrim();
-        if($configLTrim)
+        if ($configLTrim)
             $label = ltrim($label, $configLTrim);
 
         // Run Rtrim
         $configRTrim = $this->config->getPointLabelRTrim();
-        if($configRTrim)
+        if ($configRTrim)
             $label = rtrim($label, $configRTrim);
 
         // Set nice label
-        if($label !== static::POINT_PRELOAD and $label !== static::POINT_MULTIPLE_PRELOAD and $this->config->isPointLabelNice())
+        if ($label !== static::POINT_PRELOAD && $label !== static::POINT_MULTIPLE_PRELOAD && $this->config->isPointLabelNice())
             $label = ucfirst(str_replace('  ', ' ', preg_replace('/(?<!^)[A-Z]/', ' $0', $label)));
 
         $this->label = $label;
@@ -192,7 +204,7 @@ class Point implements ExportInterface
      */
     public function setStartTime($startTime = null)
     {
-        $this->startTime = ( $startTime ) ? $startTime : microtime(true);
+        $this->startTime = ($startTime) ? $startTime : microtime(true);
     }
 
     /**
@@ -208,7 +220,7 @@ class Point implements ExportInterface
      */
     public function setStartMemoryUsage($startMemoryUsage = null)
     {
-        $this->startMemoryUsage = ( $startMemoryUsage ) ? $startMemoryUsage : memory_get_usage(true);
+        $this->startMemoryUsage = ($startMemoryUsage) ? $startMemoryUsage : memory_get_usage(true);
     }
 
     /**
@@ -241,7 +253,7 @@ class Point implements ExportInterface
     public function setDifferenceMemory()
     {
         $difference = $this->stopMemoryUsage - $this->startMemoryUsage;
-        $this->differenceMemory = ($difference > 0 ) ? $difference: 0;
+        $this->differenceMemory = ($difference > 0) ? $difference : 0;
     }
 
     /**
@@ -282,13 +294,5 @@ class Point implements ExportInterface
     public function isMultiplePoint()
     {
         return $this->isMultiplePoint;
-    }
-
-    /**
-     * @param boolean $isMultiplePoint
-     */
-    public function setIsMultiplePoint($isMultiplePoint)
-    {
-        $this->isMultiplePoint = (boolean) $isMultiplePoint;
     }
 }

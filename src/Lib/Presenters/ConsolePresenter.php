@@ -18,7 +18,7 @@ class ConsolePresenter extends Presenter
     public function finishPointTrigger(Point $point)
     {
         // Preload and calculate
-        if($point->getLabel() === Point::POINT_PRELOAD OR $point->getLabel() === Point::POINT_MULTIPLE_PRELOAD)
+        if($point->getLabel() === Point::POINT_PRELOAD || $point->getLabel() === Point::POINT_MULTIPLE_PRELOAD)
             return;
 
         $this->liveOrStack(
@@ -75,9 +75,9 @@ class ConsolePresenter extends Presenter
 
         // Query log indication
         $queryLogIndication = '';
-        if($this->config->queryLogState === true)
+        if($this->config->getQueryLogState() === true)
             $queryLogIndication = terminal_style(' QUERY ', 'gray', 'black');
-        elseif($this->config->queryLogState === false)
+        elseif($this->config->getQueryLogState() === false)
             $queryLogIndication = terminal_style(' QUERY NOT ACTIVE ', 'gray', 'yellow', 'bold');
 
         // Execution time

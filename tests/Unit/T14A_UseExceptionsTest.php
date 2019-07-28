@@ -1,8 +1,10 @@
 <?php namespace Tests\Unit;
 
+use InvalidArgumentException;
 use Performance\Performance;
+use PHPUnit\Framework\TestCase;
 
-class T14A_UseExceptionsTest extends \PHPUnit_Framework_TestCase
+class T14A_UseExceptionsTest extends TestCase
 {
     protected function setTestUp()
     {
@@ -15,7 +17,7 @@ class T14A_UseExceptionsTest extends \PHPUnit_Framework_TestCase
 
         // Start multiple point 1
         Performance::point('A');
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         Performance::point('A');
 
         Performance::results();

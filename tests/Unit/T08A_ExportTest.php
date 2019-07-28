@@ -1,10 +1,9 @@
 <?php namespace Tests\Unit;
 
 use Performance\Performance;
-use Performance\Config;
+use PHPUnit\Framework\TestCase;
 
-
-class T08A_ExportTest extends \PHPUnit_Framework_TestCase
+class T08A_ExportTest extends TestCase
 {
     protected function setTestUp()
     {
@@ -13,7 +12,7 @@ class T08A_ExportTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigQueryLog()
     {
-       $this->setTestUp();
+        $this->setTestUp();
 
         // Run task A
         $this->taskA();
@@ -25,16 +24,16 @@ class T08A_ExportTest extends \PHPUnit_Framework_TestCase
         print_r($export->get());
 
         // Return all information in Json
-	    print_r($export->toJson());
+        print_r($export->toJson());
 
         // Return only config
-	    print_r($export->config()->get());
+        print_r($export->config()->get());
 
         // Return only points in Json
-	    print_r($export->points()->toJson());
+        print_r($export->points()->toJson());
 
         // Return only points in Json
-	    print_r($export->toFile('tests/Unit/export.txt'));
+        print_r($export->toFile('tests/Unit/export.txt'));
     }
 
     public function testCheckJsonForAll()

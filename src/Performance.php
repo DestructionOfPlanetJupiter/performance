@@ -60,7 +60,7 @@ class Performance
      */
     public static function message($message = null, $newLine = true)
     {
-        if( ! static::enableTool() or ! $message)
+        if( ! static::enableTool() || ! $message)
             return;
 
         // Run

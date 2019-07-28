@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="Test interface">
+        <testsuite name="Test interface legacy">
             <directory suffix='.php'>./tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="Test interface">
+            <directory suffix='.php'>./tests/src/*</directory>
         </testsuite>
     </testsuites>
 </phpunit>

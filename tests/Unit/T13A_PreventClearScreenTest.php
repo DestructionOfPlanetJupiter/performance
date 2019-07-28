@@ -2,8 +2,9 @@
 
 use Performance\Config;
 use Performance\Performance;
+use PHPUnit\Framework\TestCase;
 
-class T13A_PreventClearScreenTest extends \PHPUnit_Framework_TestCase
+class T13A_PreventClearScreenTest extends TestCase
 {
     protected function setTestUp()
     {
@@ -24,8 +25,8 @@ class T13A_PreventClearScreenTest extends \PHPUnit_Framework_TestCase
     public function testPointLabelNiceFunction()
     {
 
-	    $configItem = Performance::instance()->config->isClearScreen();
-	    $this->assertFalse($configItem);
+        $configItem = Performance::instance()->config->isClearScreen();
+        $this->assertFalse($configItem);
 
     }
 }
