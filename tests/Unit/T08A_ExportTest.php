@@ -32,7 +32,7 @@ class T08A_ExportTest extends \PHPUnit_Framework_TestCase
         print_r($export->points()->toJson());
 
         // Return only points in Json
-        print_r($export->toFile('tests/Unit/Fixtures/export.txt'));
+        print_r($export->toFile('tests/Unit/Fixtures/export.json'));
     }
 
     protected function setTestUp()

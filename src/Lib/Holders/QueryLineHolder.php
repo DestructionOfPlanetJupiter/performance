@@ -10,45 +10,52 @@ namespace Performance\Lib\Holders;
  */
 class QueryLineHolder
 {
-    /**
-     * @var
-     */
-    protected $line;
 
     /**
-     * @var
+     * @var string
      */
-    protected $time;
+    protected $line = '';
+
+    /**
+     * @var string
+     */
+    protected $time = '';
 
     /**
      * @return string
      */
-    public function getLine():string
+    public function getLine(): string
     {
         return $this->line;
     }
 
     /**
-     * @param mixed $line
+     * @param string $line
+     * @return QueryLineHolder
      */
-    public function setLine($line)
+    public function setLine(string $line): QueryLineHolder
     {
         $this->line = $line;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getTime():string
+    public function getTime(): string
     {
         return $this->time;
     }
 
     /**
-     * @param mixed $time
+     * @param int $time
+     * @return QueryLineHolder
      */
-    public function setTime($time)
+    public function setTime(int $time): QueryLineHolder
     {
-        $this->time = number_format((float)$time, 2, '.', '');
+        $this->time = number_format($time, 2, '.', '');
+
+        return $this;
     }
 }

@@ -45,6 +45,8 @@ class PerformanceHandler
 
     /**
      * Hold point stack
+     *
+     * @var Point[]
      */
     protected $pointStack = [];
 
@@ -109,6 +111,9 @@ class PerformanceHandler
             }
 
             // Resister listener
+            /**
+             * @todo needs reworking
+             */
             try {
                 DB::listen(function ($sql)
                 {
@@ -329,7 +334,6 @@ class PerformanceHandler
 
             //
             $this->pointStack[] = $point;
-
         }
     }
 

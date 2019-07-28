@@ -7,7 +7,7 @@ namespace tests\src\Lib\Handlers;
 use InvalidArgumentException;
 use Performance\Lib\Handlers\ConfigException;
 use Performance\Lib\Handlers\ConfigHandler;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ConfigHandlerTest
@@ -23,7 +23,7 @@ use PHPUnit_Framework_TestCase;
  * @covers \Performance\Lib\Handlers\ConfigHandler::setQueryLog
  * @covers \Performance\Lib\Handlers\ConfigHandler::setRunInformation
  */
-class ConfigHandlerTest extends PHPUnit_Framework_TestCase
+class ConfigHandlerTest extends TestCase
 {
     private const QUERY_LOG_STATE = 'queryLogState';
     private const CONSOLE_LIVE = 'consoleLive';
@@ -42,15 +42,10 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
      */
     protected $instance;
 
-    protected function setUp()
-    {
-        $this->instance = new ConfigHandler();
-    }
-
     /**
      * @test
      */
-    public function initConfigVars()
+    public function initConfigVars(): void
     {
         //Arrange
         $expected = [
@@ -78,7 +73,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
      * @test
      * @throws ConfigException
      */
-    public function setupConfigVar()
+    public function setupConfigVar(): void
     {
         //Arrange
         $expected = [
@@ -113,7 +108,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function setupConfigVarWithInvalidQueryLogOptions()
+    public function setupConfigVarWithInvalidQueryLogOptions(): void
     {
         //Arrange
         $this->expectException(InvalidArgumentException::class);
@@ -129,7 +124,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function setupConfigVarWithValidQueryLogOptions()
+    public function setupConfigVarWithValidQueryLogOptions(): void
     {
         //Arrange
         $expected = [
@@ -157,7 +152,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @throws ConfigException
      */
-    public function testEnableToolWithInvalidIntValue()
+    public function testEnableToolWithInvalidIntValue(): void
     {
         //Arrange
         $this->expectException(ConfigException::class);
@@ -173,7 +168,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @throws ConfigException
      */
-    public function testEnableToolWithInvalidStringValue()
+    public function testEnableToolWithInvalidStringValue(): void
     {
         //Arrange
         $this->expectException(ConfigException::class);
@@ -185,7 +180,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
         //Assert
     }
 
-    public function testPresenterWithInvalidIntValue()
+    public function testPresenterWithInvalidIntValue(): void
     {
         //Arrange
         $this->expectException(InvalidArgumentException::class);
@@ -198,7 +193,7 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
         //Assert
     }
 
-    public function testPresenterWithValidIntValue()
+    public function testPresenterWithValidIntValue(): void
     {
         //Arrange
         $expected = [
@@ -222,5 +217,10 @@ class ConfigHandlerTest extends PHPUnit_Framework_TestCase
 
         //Assert
         $this->assertEquals($expected, $export);
+    }
+
+    protected function setUp(): void
+    {
+        $this->instance = new ConfigHandler();
     }
 }

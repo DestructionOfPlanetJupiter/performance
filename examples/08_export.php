@@ -37,4 +37,4 @@ print_r($export->config()->get());
 print_r($export->points()->toJson());
 
 // Return file_put_contents() results
-print_r($export->toFile('tests/Unit/Fixtures/export.txt'));
+print_r($export->toFile('tests/Unit/Fixtures/export.json'));

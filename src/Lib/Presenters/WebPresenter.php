@@ -66,8 +66,8 @@ class WebPresenter extends Presenter
 
             echo '<table class="table-title">
                         <tr>
-                            <td width="50%">' . $this->formatter->memoryToHuman($calculateTotalHolder->totalMemory) . '<br><span>Max memory ' . ini_get("memory_limit") . '</span></td>
-                            <td width="50%">' . $this->formatter->timeToHuman($calculateTotalHolder->totalTime) . '<br><span>Max time ' . $textExecutionTime . ' on PHP ' . phpversion() . '</span></td>
+                            <td width="50%">' . $this->formatter->memoryToHuman($calculateTotalHolder->getTotalMemory()) . '<br><span>Max memory ' . ini_get("memory_limit") . '</span></td>
+                            <td width="50%">' . $this->formatter->timeToHuman($calculateTotalHolder->getTotalTime()) . '<br><span>Max time ' . $textExecutionTime . ' on PHP ' . phpversion() . '</span></td>
                         </tr>
                     </table>
                     
@@ -93,10 +93,10 @@ class WebPresenter extends Presenter
                 echo '<tr>'
                     . '<td class="t-l">' . $point->getLabel() . '</td>'
                     . '<td>' . $this->calculate->calculatePercentage($point->getDifferenceMemory(),
-                        $calculateTotalHolder->totalMemory) . '</td>'
+                        $calculateTotalHolder->getTotalMemory()) . '</td>'
                     . '<td>' . $this->formatter->memoryToHuman($point->getDifferenceMemory()) . '</td>'
                     . '<td>' . $this->calculate->calculatePercentage($point->getDifferenceTime(),
-                        $calculateTotalHolder->totalTime) . '</td>'
+                        $calculateTotalHolder->getTotalTime()) . '</td>'
                     . '<td>' . $this->formatter->timeToHuman($point->getDifferenceTime()) . '</td>'
                     . '</tr>';
 

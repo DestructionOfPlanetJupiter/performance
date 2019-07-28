@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Performance\Lib;
 
 use Performance\Lib\Handlers\ConfigHandler;
+use Performance\Lib\Holders\QueryLogHolder;
 use Performance\Lib\Interfaces\ExportInterface;
 
 /**
@@ -204,12 +205,14 @@ class Point implements ExportInterface
     }
 
     /**
-     * @param int|null $stopTime
+     * @param float|null $stopTime
      * @return Point
      */
-    public function setStopTime(?int $stopTime = null):self
+    public function setStopTime(?float $stopTime = null): self
     {
         $this->stopTime = ($stopTime) ? $stopTime : microtime(true);
+
+        return $this;
     }
 
     /**
@@ -224,9 +227,11 @@ class Point implements ExportInterface
      * @param int|null $stopMemoryUsage
      * @return Point
      */
-    public function setStopMemoryUsage(?int $stopMemoryUsage = null):self
+    public function setStopMemoryUsage(?int $stopMemoryUsage = null): self
     {
         $this->stopMemoryUsage = ($stopMemoryUsage) ? $stopMemoryUsage : memory_get_usage(true);
+
+        return $this;
     }
 
     /**
@@ -322,7 +327,7 @@ class Point implements ExportInterface
     }
 
     /**
-     * @return array
+     * @return QueryLogHolder[]
      */
     public function getQueryLog()
     {

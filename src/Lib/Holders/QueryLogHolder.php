@@ -4,66 +4,79 @@ declare(strict_types=1);
 
 namespace Performance\Lib\Holders;
 
+use function array_flip;
+use function strtolower;
+use function substr;
+
 /**
+ * @todo needs refactoring
+ *
  * Class QueryLogHolder
  * @package Performance\Lib\Holders
  */
 class QueryLogHolder
 {
+    protected const QUERYTYPE = [
+        'select',
+        'insert',
+        'update',
+        'delete'
+    ];
+
     /**
      * @var
      */
-    public $queryType;
+    private $queryType;
 
     /**
-     * @var null
+     * @var string
      */
-    public $query;
+    private $query = '';
 
     /**
      * @var array
      */
-    public $bindings;
+    private $bindings;
 
     /**
-     * @var null
+     * @var int
      */
-    public $time;
-
-    /**
-     * @var
-     */
-    public $driver;
+    private $time = 0;
 
     /**
      * @var
      */
-    public $database;
+    private $driver;
 
     /**
      * @var
      */
-    public $host;
+    private $database;
 
     /**
      * @var
      */
-    public $port;
+    private $host;
 
     /**
      * @var
      */
-    public $username;
+    private $port;
 
     /**
      * @var
      */
-    public $prefix;
+    private $username;
+
+    /**
+     * @var
+     */
+    private $prefix;
 
     /**
      * @var array
      */
-    public $connectionName;
+    private $connectionName;
 
     /**
      * QueryLogHolder constructor.
@@ -71,9 +84,9 @@ class QueryLogHolder
      */
     public function __construct($sql)
     {
-        $this->time = isset($sql->time) ? $sql->time : null;
-        $this->query = isset($sql->sql) ? $sql->sql : null;
-        $this->bindings = isset($sql->bindings) ? $sql->bindings : [];
+        $this->time = $sql->time ?? null;
+        $this->query = $sql->sql ?? '';
+        $this->bindings = $sql->bindings ?? [];
 
         $connection = $sql->connection;
 
@@ -83,26 +96,16 @@ class QueryLogHolder
         $this->connectionName = method_exists($connection, 'getName') ? $sql->connection->getName() : [];
         $this->setUpConnection($connection, $config);
 
-        // Check type
         $this->checkQueryType();
     }
 
     /**
-     * Set query type
+     * Extract and set query type
      */
     protected function checkQueryType()
     {
-        if (strtolower(substr($this->query, 0, 6)) === 'select') {
-            $this->queryType = 'select';
-        } elseif (strtolower(substr($this->query, 0, 6)) === 'insert') {
-            $this->queryType = 'insert';
-        } elseif (strtolower(substr($this->query, 0, 6)) === 'delete') {
-            $this->queryType = 'delete';
-        } elseif (strtolower(substr($this->query, 0, 6)) === 'update') {
-            $this->queryType = 'update';
-        } else {
-            $this->queryType = 'unknown';
-        }
+        $flipped = array_flip(self::QUERYTYPE);
+        $this->queryType = $flipped[ strtolower(substr($this->query, 0, 6)) ] ?? 'unknown';
     }
 
     /**
@@ -112,12 +115,221 @@ class QueryLogHolder
     public function setUpConnection($connection, array $config): void
     {
         if (method_exists($connection, 'getConfig')) {
-            $this->database = isset($config[ 'database' ]) ? $config[ 'database' ] : null;
-            $this->driver = isset($config[ 'driver' ]) ? $config[ 'driver' ] : null;
-            $this->host = isset($config[ 'host' ]) ? $config[ 'host' ] : null;
-            $this->port = isset($config[ 'port' ]) ? $config[ 'port' ] : null;
-            $this->username = isset($config[ 'username' ]) ? $config[ 'username' ] : null;
-            $this->prefix = isset($config[ 'prefix' ]) ? $config[ 'prefix' ] : null;
+            $this->database = $config[ 'database' ] ?? null;
+            $this->driver = $config[ 'driver' ] ?? null;
+            $this->host = $config[ 'host' ] ?? null;
+            $this->port = $config[ 'port' ] ?? null;
+            $this->username = $config[ 'username' ] ?? null;
+            $this->prefix = $config[ 'prefix' ] ?? null;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQueryType()
+    {
+        return $this->queryType;
+    }
+
+    /**
+     * @param $queryType
+     * @return QueryLogHolder
+     */
+    public function setQueryType($queryType): QueryLogHolder
+    {
+        $this->queryType = $queryType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param $query
+     * @return QueryLogHolder
+     */
+    public function setQuery(string $query): QueryLogHolder
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBindings(): array
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * @param array $bindings
+     * @return QueryLogHolder
+     */
+    public function setBindings(array $bindings): QueryLogHolder
+    {
+        $this->bindings = $bindings;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param $time
+     * @return QueryLogHolder
+     */
+    public function setTime(int $time): QueryLogHolder
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    /**
+     * @param $driver
+     * @return QueryLogHolder
+     */
+    public function setDriver($driver): QueryLogHolder
+    {
+        $this->driver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param $database
+     * @return QueryLogHolder
+     */
+    public function setDatabase($database): QueryLogHolder
+    {
+        $this->database = $database;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param $host
+     * @return QueryLogHolder
+     */
+    public function setHost($host): QueryLogHolder
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param $port
+     * @return QueryLogHolder
+     */
+    public function setPort($port): QueryLogHolder
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param $username
+     * @return QueryLogHolder
+     */
+    public function setUsername($username): QueryLogHolder
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @param $prefix
+     * @return QueryLogHolder
+     */
+    public function setPrefix($prefix): QueryLogHolder
+    {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConnectionName(): array
+    {
+        return $this->connectionName;
+    }
+
+    /**
+     * @param array $connectionName
+     * @return QueryLogHolder
+     */
+    public function setConnectionName(array $connectionName): QueryLogHolder
+    {
+        $this->connectionName = $connectionName;
+
+        return $this;
     }
 }

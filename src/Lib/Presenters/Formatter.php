@@ -4,21 +4,32 @@ declare(strict_types=1);
 
 namespace Performance\Lib\Presenters;
 
+use function array_key_exists;
+use function array_search;
+use function floor;
+use function is_numeric;
+use function ksort;
 use Performance\Lib\Handlers\ConfigHandler;
 use Performance\Lib\Holders\QueryLineHolder;
 use Performance\Lib\Point;
 
-use function ksort;
+use function pow;
+use function sprintf;
 use function str_repeat;
 use function strlen;
 use function strpos;
 
+/**
+ * Class Formatter
+ * @package Performance\Lib\Presenters
+ */
 class Formatter
 {
 
-    const COUNT = 'count';
-
-    const TIME = 'time';
+    private const COUNT = 'count';
+    private const TIME = 'time';
+    private const MICROSECONDS = 1000000;
+    private const MILLISECONDS = 1000;
 
     protected $config;
 
@@ -31,15 +42,7 @@ class Formatter
         $this->config = $config;
     }
 
-    /**
-     * @param $microTime
-     * @param string $unit
-     * @param int $decimals
-     * @return float
-     *
-     * @throws FormatterException
-     */
-    public function timeToHuman($microTime, $unit = 'auto', $decimals = 2): float
+    protected static function unitByMicroTime(float $microTime, string $unit): string
     {
         if ($unit === "auto") {
             if ($microTime > 1) {
@@ -50,13 +53,27 @@ class Formatter
                 $unit = 'μs';
             }
         }
+        return $unit;
+    }
+
+    /**
+     * @param $microTime
+     * @param string $unit
+     * @param int $decimals
+     * @return float
+     *
+     * @throws FormatterException
+     */
+    public function timeToHuman(float $microTime, string $unit = 'auto', int $decimals = 2): float
+    {
+        $unit = self::unitByMicroTime($microTime, $unit);
 
         switch ($unit) {
             case 'μs':
-                $result = round($microTime * 1000000, $decimals) . ' ' . $unit;
+                $result = round($microTime * self::MICROSECONDS, $decimals) . ' ' . $unit;
                 break;
             case 'ms':
-                $result = round($microTime * 1000, $decimals) . ' ' . $unit;
+                $result = round($microTime * self::MILLISECONDS, $decimals) . ' ' . $unit;
                 break;
             case 's':
                 $result = round($microTime * 1, $decimals) . '  ' . $unit;
@@ -76,7 +93,7 @@ class Formatter
      * @param int $decimals
      * @return string
      */
-    public function memoryToHuman($bytes, $unit = "", $decimals = 2):string
+    public function memoryToHuman($bytes, $unit = "", $decimals = 2): string
     {
         if ($bytes <= 0) {
             return '0.00 KB';
@@ -118,7 +135,7 @@ class Formatter
     }
 
     /**
-     * @param $input
+     * @param string $input
      * @param $pad_length
      * @param string $pad_string
      * @return string
@@ -126,9 +143,9 @@ class Formatter
      * @todo Fix problem 'μs'
      *
      */
-    public function stringPad($input, $pad_length, $pad_string = ' '):string
+    public function stringPad(string $input, int $pad_length, string $pad_string = ' '): string
     {
-        $count = strlen($input);
+        $count = \strlen($input);
 
         // Fix μ issues
         if (strpos($input, 'μ')) {
@@ -154,15 +171,17 @@ class Formatter
 
         if ($this->config->getQueryLogView() === 'resume') {
             $buildLineList = [];
+
             foreach ($point->getQueryLog() as $queryLogHolder) {
-                $type = $queryLogHolder->queryType;
-                if (isset($buildLineList[ $type ])) {
-                    ++$buildLineList[ $type ][ self::COUNT ];
-                    $buildLineList[ $type ][ self::TIME ] = $buildLineList[ $type ][ self::TIME ] + $queryLogHolder->time;
-                } else {
+                $type = $queryLogHolder->getQueryType();
+                if (!isset($buildLineList[ $type ])) {
                     $buildLineList[ $type ][ self::COUNT ] = 1;
-                    $buildLineList[ $type ][ self::TIME ] = $queryLogHolder->time;
+                    $buildLineList[ $type ][ self::TIME ] = $queryLogHolder->getTime();
+                    continue;
                 }
+
+                ++$buildLineList[ $type ][ self::COUNT ];
+                $buildLineList[ $type ][ self::TIME ] = $buildLineList[ $type ][ self::TIME ] + $queryLogHolder->getTime();
             }
 
             ksort($buildLineList);
@@ -170,7 +189,7 @@ class Formatter
             foreach ($buildLineList as $key => $item) {
                 $queryLineHolder = new QueryLineHolder();
                 $queryLineHolder->setLine('Database query ' . $key . ' ' . $item[ self::COUNT ] . 'x');
-                $queryLineHolder->setTime($item[ self::TIME ]);
+                $queryLineHolder->setTime((int)($item[ self::TIME ] ?? 0));
                 $lineArray[] = $queryLineHolder;
             }
         }
@@ -179,8 +198,8 @@ class Formatter
         if ($this->config->getQueryLogView() === 'full') {
             foreach ($point->getQueryLog() as $queryLogHolder) {
                 $queryLineHolder = new QueryLineHolder();
-                $queryLineHolder->setLine($queryLogHolder->query);
-                $queryLineHolder->setTime($queryLogHolder->time);
+                $queryLineHolder->setLine((string)($queryLogHolder->getQuery()));
+                $queryLineHolder->setTime((int)($queryLogHolder->getTime()));
                 $lineArray[] = $queryLineHolder;
             }
         }

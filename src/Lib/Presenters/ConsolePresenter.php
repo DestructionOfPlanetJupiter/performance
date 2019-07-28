@@ -44,7 +44,7 @@ class ConsolePresenter extends Presenter
     private $printStack = [];
 
 
-    public function bootstrap():void
+    public function bootstrap(): void
     {
         $this->printStartUp();
     }
@@ -249,11 +249,11 @@ class ConsolePresenter extends Presenter
 
         $this->liveOrStack(str_repeat("-", $this->commandLineWidth - 1) . PHP_EOL
             . $a
-            . " " . $this->formatter->stringPad($this->formatter->timeToHuman($calculateTotalHolder->totalTime) . ' ',
+            . " " . $this->formatter->stringPad($this->formatter->timeToHuman($calculateTotalHolder->getTotalTime()) . ' ',
                 $this->cellWightResult, ' ')
-            . " " . str_pad($this->formatter->memoryToHuman($calculateTotalHolder->totalMemory) . ' ',
+            . " " . str_pad($this->formatter->memoryToHuman($calculateTotalHolder->getTotalMemory()) . ' ',
                 $this->cellWightResult, ' ', STR_PAD_LEFT)
-            . " " . str_pad($this->formatter->memoryToHuman($calculateTotalHolder->totalMemoryPeak) . ' ',
+            . " " . str_pad($this->formatter->memoryToHuman($calculateTotalHolder->getTotalMemoryPeak()) . ' ',
                 $this->cellWightResult, ' ', STR_PAD_LEFT)
             . PHP_EOL
             . PHP_EOL);

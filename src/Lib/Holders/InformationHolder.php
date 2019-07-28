@@ -17,17 +17,15 @@ class InformationHolder
      */
     protected $config;
 
-    // Run information holder
+    /**
+     * @var string
+     */
+    protected $currentUser = '';
 
     /**
-     * @var
+     * @var int
      */
-    protected $currentUser;
-
-    /**
-     * @var
-     */
-    protected $currentProcessId;
+    protected $currentProcessId = 0;
 
     /**
      * InformationHolder constructor.
@@ -48,21 +46,17 @@ class InformationHolder
         }
     }
 
-    protected function setRunInformation()
+    protected function setRunInformation():void
     {
-        // Set unknown
-        $this->currentUser = '?';
-        $this->currentProcessId = '?';
-
         // Set current user
         $this->currentUser = get_current_user();
 
         // Set current process id
-        $this->currentProcessId = getmypid();
+        $this->currentProcessId = (int)(getmypid());
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCurrentUser(): string
     {
@@ -70,9 +64,9 @@ class InformationHolder
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCurrentProcessId()
+    public function getCurrentProcessId(): int
     {
         return $this->currentProcessId;
     }

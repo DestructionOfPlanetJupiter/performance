@@ -4,19 +4,25 @@ declare(strict_types=1);
 
 namespace Performance\Lib\Presenters;
 
+use function array_slice;
+use function memory_get_peak_usage;
 use Performance\Lib\Holders\CalculateTotalHolder;
 use Performance\Lib\Point;
+use function round;
 
+/**
+ * Class Calculate
+ * @package Performance\Lib\Presenters
+ */
 class Calculate
 {
     /**
      * Calculate total memory
      *
-     * return Performance\Lib\Holders\CalculateTotalHolder;
      * @param Point[] $pointStack
      * @return CalculateTotalHolder
      */
-    public function totalTimeAndMemory($pointStack):CalculateTotalHolder
+    public function totalTimeAndMemory($pointStack): CalculateTotalHolder
     {
         $max_time = 0;
         $max_memory = 0;
@@ -32,19 +38,19 @@ class Calculate
     /**
      * Calculate percentage
      *
-     * @param $pointDifference
-     * @param $total
-     * @return float
+     * @param int $pointDifference
+     * @param int $total
+     * @return int
      */
-    public function calculatePercentage($pointDifference, $total): float
+    public function calculatePercentage(int $pointDifference, int $total): int
     {
         $upCount = 1000000;
-        $percentage = 0.0;
+        $percentage = 0;
 
         if ($pointDifference > 0 && $total > 0) {
             $percentage = round((100 * $pointDifference * $upCount) / ($total * $upCount));
         }
 
-        return $percentage;
+        return (int)$percentage;
     }
 }
